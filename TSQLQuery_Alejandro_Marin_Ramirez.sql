@@ -66,27 +66,35 @@ JOIN Region R ON P.Id=R.IdPais
 JOIN Ciudad C ON R.Id=C.IdRegion
 WHERE P.Nombre='Japón'
 
+SELECT * 
+FROM sys.tables 
 
+SELECT * 
+FROM Moneda
 
---#1
-
-ALTER TABLE Pais
-ADD Moneda VARCHAR(50),
-    Sigla VARCHAR(10),
-    Imagen VARBINARY(MAX);
-
-UPDATE Pais
-SET Pais.Moneda = M.Moneda,
-    Pais.Sigla = M.Sigla,
-    Pais.Imagen = M.Imagen
+SELECT Moneda 
 FROM Pais
-JOIN Moneda M ON Pais.IdMoneda = M.Id;
+-- Taller03 - Punto 2
+
+--1.
+
+CREATE TABLE Moneda (
+    IdMoneda INT IDENTITY(1,1) PRIMARY KEY,
+    Moneda NVARCHAR(100),
+    Sigla NVARCHAR(10),
+    Imagen VARBINARY(MAX)
+);
+
+INSERT INTO Moneda (Moneda)
+SELECT Moneda
+FROM Pais
+WHERE Moneda IS NOT NULL;
 
 ALTER TABLE Pais
-DROP COLUMN IdMoneda;
+DROP COLUMN Moneda;
 
---#2
+--2.
 
 ALTER TABLE Pais
-ADD Escudo VARBINARY(MAX),
-    Bandera VARBINARY(MAX);
+ADD Bandera NVARCHAR(255),
+    Mapa NVARCHAR(255);
