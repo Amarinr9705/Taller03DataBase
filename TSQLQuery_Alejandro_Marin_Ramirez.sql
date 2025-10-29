@@ -66,35 +66,62 @@ JOIN Region R ON P.Id=R.IdPais
 JOIN Ciudad C ON R.Id=C.IdRegion
 WHERE P.Nombre='Japón'
 
+
+
+--       Taller 03
+
+-- 1. 
+CREATE TABLE Moneda (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    Moneda NVARCHAR(100) NOT NULL,
+    Sigla NVARCHAR(10),
+    Imagen VARBINARY(MAX)
+);
+
+
+INSERT INTO Moneda (Moneda)
+SELECT DISTINCT Moneda
+FROM Pais
+WHERE Moneda IS NOT NULL;
+
+
+ALTER TABLE Pais
+ADD IdMoneda INT;
+
+
+UPDATE P
+SET P.IdMoneda = M.Id
+FROM Pais P
+INNER JOIN Moneda M ON P.Moneda = M.Moneda;
+
+
+ALTER TABLE Pais
+DROP COLUMN Moneda;
+
+
+ALTER TABLE Pais
+ADD CONSTRAINT FK_Pais_Moneda
+FOREIGN KEY (IdMoneda) REFERENCES Moneda(Id);
+
+-- 2. 
+
+ALTER TABLE Pais
+ADD Bandera NVARCHAR(255),
+    Mapa NVARCHAR(255);
+
+-- Revisar
+
 SELECT * 
 FROM sys.tables 
 
 SELECT * 
 FROM Moneda
 
-SELECT Moneda 
+SELECT * 
 FROM Pais
--- Taller03 - Punto 2
 
---1.
-
-CREATE TABLE Moneda (
-    IdMoneda INT IDENTITY(1,1) PRIMARY KEY,
-    Moneda NVARCHAR(100),
-    Sigla NVARCHAR(10),
-    Imagen VARBINARY(MAX)
-);
-
-INSERT INTO Moneda (Moneda)
-SELECT Moneda
-FROM Pais
-WHERE Moneda IS NOT NULL;
-
-ALTER TABLE Pais
-DROP COLUMN Moneda;
-
---2.
-
-ALTER TABLE Pais
-ADD Bandera NVARCHAR(255),
-    Mapa NVARCHAR(255);
+SELECT 
+    P.Nombre AS Pais,
+    M.Moneda AS Moneda
+FROM Pais P
+JOIN Moneda M ON P.IdMoneda = M.Id;
